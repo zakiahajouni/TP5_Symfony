@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use App\Entity\Category;
+use App\Form\CategoryType;
 
 class IndexController extends AbstractController
 {
@@ -108,4 +110,29 @@ public function edit(Request $request, $id,ManagerRegistry $doctirine) {
     $response->send();
     return $this->redirectToRoute('article_list');
     }
+/**
+ * @Route("/category/newCat", name="new_category")
+ * Method({"GET", "POST"})
+ */
+#[Route('/category/newCat', name: 'new_category')]
+public function newCategory(Request $request, ManagerRegistry $doctrine)
+{
+    $category = new Category();
+    $form = $this->createForm(CategoryType::class, $category);
+    $form->handleRequest($request);
+    if ($form->isSubmitted() && $form->isValid()) {
+        $article = $form->getData();
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($category);
+        $entityManager->flush();
+        
+    }
+    
+    return $this->render('articles/newCategory.html.twig', ['form' =>$form->createView()]);
+}
+
+
+
+
+
     }

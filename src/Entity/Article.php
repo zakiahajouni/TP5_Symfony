@@ -24,6 +24,9 @@ class Article
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
     #[Assert\GreaterThan(value: 0, message: 'Le prix ne peut pas être égal à 0')]    private ?string $prix = null;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?Category $category = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -49,6 +52,18 @@ class Article
     public function setPrix(string $prix): self
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
